@@ -1,5 +1,3 @@
 maintainer "Phillip Shipley"
-description "Configure Mail Admin"
+description "Chef Cookbooks for SIL"
 version "0.1"
-
-recipe "mailadmin::configure", "Configure Mail Admin"

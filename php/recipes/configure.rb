@@ -5,7 +5,7 @@ node[:deploy].each do |application, deploy|
   end
 
   # write out params.php
-  template "#{deploy[:deploy_to]}/protected/config/params.php" do
+  template "#{deploy[:deploy_to]}#{deploy[:config_path]}/params.php" do
     cookbook 'php'
     source 'array.php.erb'
     mode '0660'
@@ -14,13 +14,11 @@ node[:deploy].each do |application, deploy|
     variables(
       :data => deploy[:params],
     )
-    only_if do
-      File.exists?("#{deploy[:deploy_to]}/protected/config")
-    end
+    only_if defined? deploy[:params]
   end
 
   # write out local.php
-  template "#{deploy[:deploy_to]}/protected/config/local.php" do
+  template "#{deploy[:deploy_to]}#{deploy[:config_path]}/local.php" do
     cookbook 'php'
     source 'array.php.erb'
     mode '0660'
@@ -29,8 +27,6 @@ node[:deploy].each do |application, deploy|
     variables(
       :data => deploy[:local],
     )
-    only_if do
-      File.exists?("#{deploy[:deploy_to]}/protected/config")
-    end
+    only_if defined? deploy[:local]
   end
 end
