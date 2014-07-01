@@ -10,3 +10,13 @@ packages.each do |name|
 		action :install
 	end
 end
+
+include_recipe "apache2"
+
+web_app "mailadmin" do
+	server_name node['vhost']['hostname']
+	docroot node['vhost']['docroot']
+	allow_override node['vhost']['allow_override']
+	server_port node['vhost']['port']
+	cookbook "apache2"
+end

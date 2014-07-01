@@ -5,3 +5,5 @@ version "0.0.1"
 maintainer "SIL GTIS"
 
 recipe "mailadmin", "Main application configuration and core dependencies"
+
+depends "apache2"
