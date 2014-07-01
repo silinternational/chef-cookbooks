@@ -6,18 +6,9 @@
 	end
 end
 
-# Use pecl to install xdebug
-sudo pecl install Xdebug
-
-# Enable xdebug for unit test code coverage
-if grep -q ";xdebug;" /etc/php.ini; then
-    echo 'xdebug already setup in php.ini'
-else
-    echo 'Adding the following to /etc/php.ini'
-    cat <<EOL | sudo tee -a /etc/php.ini
-;xdebug;
-[xdebug]
-zend_extension="/usr/lib64/php/modules/xdebug.so"
-xdebug.remote_enable = 1
-EOL
-fi
+# install the xdebug pecl
+php_pear "xdebug" do
+  # Specify that xdebug.so must be loaded as a zend extension
+  zend_extensions ['xdebug.so']
+  action :install
+end

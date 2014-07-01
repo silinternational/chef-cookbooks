@@ -6,3 +6,5 @@ maintainer "SIL GTIS"
 
 recipe "silphp::configure", "Configure script to create php arrays out of provided JSON"
 recipe "silphp::xdebug", "Install and enable xdebug in PHP, primarily used in dev environments"
+
+depends "php"
