@@ -55,3 +55,10 @@ mysql_database_user 'mailadmin_test' do
 	connection mysql_connection_info
 	action [:create,:grant]
 end
+
+# Disable EnableSendFile in apache, needed when using vagrant on windows
+unless system('grep -q "EnableSendfile" /etc/httpd/conf/httpd.conf')
+	File.open('/etc/httpd/conf/httpd.conf', 'a') { |f|
+	  f.puts "EnableSendfile off"
+	}
+end
