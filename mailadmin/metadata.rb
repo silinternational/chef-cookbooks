@@ -7,3 +7,5 @@ maintainer "SIL GTIS"
 recipe "mailadmin", "Main application configuration and core dependencies"
 
 depends "apache2"
+depends "mysql-chef_gem"
+depends "database"
