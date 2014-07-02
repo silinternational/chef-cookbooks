@@ -57,8 +57,11 @@ mysql_database_user 'mailadmin_test' do
 end
 
 # Disable EnableSendFile in apache, needed when using vagrant on windows
-unless system('grep -q "EnableSendfile" /etc/httpd/conf/httpd.conf')
-	File.open('/etc/httpd/conf/httpd.conf', 'a') { |f|
-	  f.puts "EnableSendfile off"
-	}
+file "/etc/httpd/conf.d/sendfile.conf" do
+	owner "root"
+	group "root"
+	mode "0644"
+	content "EnableSendfile off"
+	action :create
+	notifies :restart, "service[apache2]", :immediately
 end
