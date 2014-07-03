@@ -5,8 +5,8 @@ node[:deploy].each do |application, deploy|
   end
 
   # write out params.php
-  template "#{deploy[:deploy_to]}#{deploy[:config_path]}/params.php" do
-    cookbook 'php'
+  template "#{deploy[:deploy_to]}/#{deploy[:config_path]}/params.php" do
+    cookbook 'silphp'
     source 'array.php.erb'
     mode '0660'
     owner deploy[:user]
@@ -18,8 +18,8 @@ node[:deploy].each do |application, deploy|
   end
 
   # write out local.php
-  template "#{deploy[:deploy_to]}#{deploy[:config_path]}/local.php" do
-    cookbook 'php'
+  template "#{deploy[:deploy_to]}/#{deploy[:config_path]}/local.php" do
+    cookbook 'silphp'
     source 'array.php.erb'
     mode '0660'
     owner deploy[:user]

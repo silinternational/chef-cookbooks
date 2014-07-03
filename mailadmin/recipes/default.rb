@@ -65,3 +65,30 @@ file "/etc/httpd/conf.d/sendfile.conf" do
 	action :create
 	notifies :restart, "service[apache2]", :immediately
 end
+
+# Deploy mailadmin from git
+node['deploy'].each do |appname, deploy|
+	application appname do
+		path  deploy['deploy_to']
+		owner deploy['owner']
+		group deploy['group']
+
+		repository deploy['scm']['repository']
+		revision   deploy['scm']['revision']
+		deploy_key deploy['scm']['ssh_key']
+	end
+end
+
+# Update composer dependencies and run yii migrations
+node['deploy'].each do |appname, deploy|
+	update_composer do
+		path "#{deploy['deploy_to']}/#{deploy['composer_dir']}"
+		self_update true
+		as_update true
+	end
+
+	yii_migrate do
+		path "#{deploy['deploy_to']}/#{deploy['yii_dir']}"
+	end
+end
+
