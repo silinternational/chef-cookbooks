@@ -77,18 +77,22 @@ node['deploy'].each do |appname, deploy|
 		revision   deploy['scm']['revision']
 		deploy_key deploy['scm']['ssh_key']
 	end
-end
 
-# Update composer dependencies and run yii migrations
-node['deploy'].each do |appname, deploy|
-	update_composer do
-		path "#{deploy['deploy_to']}/#{deploy['composer_dir']}"
-		self_update true
-		as_update true
+	# Update folder permissions
+	directory "#{deploy['deploy_to']}/current/web-files/protected/runtime" do
+		owner "apache"
+		group "apache"
+		mode "0775"
+	end
+	directory "#{deploy['deploy_to']}/current/web-files/application/assets" do
+		owner "apache"
+		group "apache"
+		mode "0775"
 	end
 
-	yii_migrate do
-		path "#{deploy['deploy_to']}/#{deploy['yii_dir']}"
+	# Create simplesaml symlink if needed
+	link "#{deploy['deploy_to']}/current/web-files/application/simplesaml" do
+		to "#{deploy['deploy_to']}/current/web-files/simplesamlphp/www/"
 	end
-end
 
+end
