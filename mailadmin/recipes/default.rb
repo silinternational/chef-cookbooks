@@ -95,4 +95,9 @@ node['deploy'].each do |appname, deploy|
 		to "#{deploy['deploy_to']}/current/web-files/simplesamlphp/www/"
 	end
 
+	# Create phpmyadmin symlink if needed
+	link "#{deploy['deploy_to']}/current/web-files/application/phpmyadmin" do
+		to "#{deploy['deploy_to']}/current/web-files/vendor/fillup/phpmyadmin-minimal"
+	end
+
 end
