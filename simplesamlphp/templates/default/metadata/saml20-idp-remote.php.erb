@@ -15,11 +15,22 @@ $metadata['https://openidp.feide.no'] = array(
 $metadata['<%= @data[:idp] %>'] = array(
     'metadata-set' => 'saml20-idp-remote',
     'entityid' => '<%= @data[:idp] %>',
-    'SingleSignOnService' => '<%= @data[:SingleSignOnService] %>',
+    'SingleSignOnService' => array(
+        0 => array(
+            'Binding' => 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect',
+            'Location' => '<%= @data[:SingleSignOnService] %>',
+        ),
+    ),
     'SingleLogoutService' => '<%= @data[:SingleLogoutService] %>',
     'certData' => '<%= @data[:certData] %>',
     'NameIDFormat' => 'urn:oasis:names:tc:SAML:2.0:nameid-format:transient',
     'OrganizationName' => '<%= @data[:orgName] %>',
     'OrganizationDisplayName' => '<%= @data[:orgName] %>',
     'OrganizationURL' => '<%= @data[:orgUrl] %>',
+    'authproc' => array(
+        50 => array(
+            'class' => 'core:AttributeMap',
+            'oid2name',
+        ),
+    ),
 );

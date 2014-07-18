@@ -16,7 +16,6 @@ node[:deploy].each do |application, deploy|
 
 		# write out config/authsources.php
         template "#{deploy[:deploy_to]}/simplesamlphp/config/authsources.php" do
-            cookbook 'php'
             source 'config/authsources.php.erb'
             mode '0660'
             owner deploy[:user]
@@ -31,7 +30,6 @@ node[:deploy].each do |application, deploy|
 
         # write out config/config.php
         template "#{deploy[:deploy_to]}/simplesamlphp/config/config.php" do
-            cookbook 'php'
             source 'config/config.php.erb'
             mode '0660'
             owner deploy[:user]
@@ -46,7 +44,6 @@ node[:deploy].each do |application, deploy|
 
         # write out metadata/saml20-idp-remote.php
         template "#{deploy[:deploy_to]}/simplesamlphp/metadata/saml20-idp-remote.php" do
-            cookbook 'php'
             source 'metadata/saml20-idp-remote.php.erb'
             mode '0660'
             owner deploy[:user]
