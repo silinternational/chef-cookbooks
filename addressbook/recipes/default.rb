@@ -42,20 +42,20 @@ end
 node['deploy'].each do |appname, deploy|
 
     # Update folder permissions
-    directory "#{deploy['deploy_to']}/protected/runtime" do
+    directory "#{deploy['deploy_to']}/current/protected/runtime" do
         owner "apache"
         group "apache"
         mode "0775"
     end
-    directory "#{deploy['deploy_to']}/public/assets" do
+    directory "#{deploy['deploy_to']}/current/public/assets" do
         owner "apache"
         group "apache"
         mode "0775"
     end
 
     # Create simplesaml symlink if needed
-    link "#{deploy['deploy_to']}/public/simplesaml" do
-        to "#{deploy['deploy_to']}/simplesamlphp/www/"
+    link "#{deploy['deploy_to']}/current/public/simplesaml" do
+        to "#{deploy['deploy_to']}/current/simplesamlphp/www/"
     end
 
 end
