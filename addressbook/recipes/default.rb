@@ -10,19 +10,29 @@ packages.each do |name|
 end
 
 # Put SSL cert files where they go
-file "#{node['vhost']['ssl_cert_path']}/#{node['vhost']['server_name']}.crt" do
+file "#{node['vhost']['ssl']['cert_path']}/#{node['vhost']['server_name']}.crt" do
     owner "root"
     group "root"
     mode "0644"
     action :create
-    content node['vhost']['ssl_cert_content']
+    content node['vhost']['ssl']['cert_content']
+    only_if { node['vhost']['ssl'] && node['vhost']['ssl']['enabled'] && !File.exists?("#{node['vhost']['ssl']['cert_path']}/#{node['vhost']['server_name']}.crt") }
 end
-file "#{node['vhost']['ssl_key_path']}/#{node['vhost']['server_name']}.key" do
+file "#{node['vhost']['ssl']['key_path']}/#{node['vhost']['server_name']}.key" do
     owner "root"
     group "root"
     mode "0600"
     action :create
-    content node['vhost']['ssl_key_content']
+    content node['vhost']['ssl']['key_content']
+    only_if { node['vhost']['ssl'] && node['vhost']['ssl']['enabled'] && !File.exists?("#{node['vhost']['ssl']['key_path']}/#{node['vhost']['server_name']}.key") }
+end
+file "#{node['vhost']['ssl']['intermediate_cert_file']}" do
+    owner "root"
+    group "root"
+    mode "0644"
+    action :create
+    content node['vhost']['ssl']['intermediate_cert_content']
+    only_if { node['vhost']['ssl'] && node['vhost']['ssl']['enabled'] && node['vhost']['ssl']['intermediate_cert_file'] && !File.exists?(node['vhost']['ssl']['intermediate_cert_file']) }
 end
 
 # Create vhost for addressbook
@@ -33,29 +43,27 @@ web_app "addressbook" do
     docroot node['vhost']['docroot']
     allow_override node['vhost']['allow_override']
     server_port node['vhost']['port']
-    ssl_enable node['vhost']['ssl_enable']
-    ssl_cert_file "#{node['vhost']['ssl_cert_path']}/#{node['vhost']['server_name']}.crt"
-    ssl_key_file "#{node['vhost']['ssl_key_path']}/#{node['vhost']['server_name']}.key"
+    ssl_config node['vhost']['ssl']
 end
 
 # Configure apps
 node['deploy'].each do |appname, deploy|
 
     # Update folder permissions
-    directory "#{deploy['deploy_to']}/current/protected/runtime" do
+    directory "#{deploy['deploy_to']}#{deploy['aws_extra_path']}/protected/runtime" do
         owner "apache"
         group "apache"
         mode "0775"
     end
-    directory "#{deploy['deploy_to']}/current/public/assets" do
+    directory "#{deploy['deploy_to']}#{deploy['aws_extra_path']}/public/assets" do
         owner "apache"
         group "apache"
         mode "0775"
     end
 
     # Create simplesaml symlink if needed
-    link "#{deploy['deploy_to']}/current/public/simplesaml" do
-        to "#{deploy['deploy_to']}/current/simplesamlphp/www/"
+    link "#{deploy['deploy_to']}#{deploy['aws_extra_path']}/public/simplesaml" do
+        to "#{deploy['deploy_to']}#{deploy['aws_extra_path']}/simplesamlphp/www/"
     end
 
 end

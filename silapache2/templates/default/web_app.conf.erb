@@ -33,12 +33,15 @@
   DirectoryIndex <%= [@params[:directory_index]].flatten.join " " %>
   <% end -%>
 
-  <% if @params[:ssl_enable] -%>
+  <% if @params[:ssl_config] and @params[:ssl_config][:enabled] -%>
   SSLEngine on
   SSLProtocol all -SSLv2
   SSLCipherSuite ALL:!ADH:!EXPORT:!SSLv2:!LOW:RC4+RSA:+HIGH
-  SSLCertificateFile <%= @params[:ssl_cert_file] %>
-  SSLCertificateKeyFile <%= @params[:ssl_key_file] %>
+  SSLCertificateFile <%= @params[:ssl_config][:cert_path] %>/<%= @params[:server_name] %>.crt
+  SSLCertificateKeyFile <%= @params[:ssl_config][:key_path] %>/<%= @params[:server_name] %>.key
+    <% if@params[:ssl_config][:intermediate_cert_file] -%>
+  SSLCACertificateFile <%= @params[:ssl_config][:intermediate_cert_file] %>
+    <% end -%>
   <% end -%>
 
   RewriteEngine On
@@ -46,3 +49,9 @@
   RewriteLogLevel 0
 
 </VirtualHost>
+<% if @params[:ssl_config] and @params[:ssl_config][:enabled] and @params[:ssl_config][:redirect_http] -%>
+<VirtualHost *:80>
+  ServerName <%= @params[:server_name] %>
+  Redirect permanent / https://<%= @params[:server_name] %>
+</VirtualHost>
+<% end -%>
